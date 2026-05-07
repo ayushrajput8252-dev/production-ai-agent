@@ -54,3 +54,29 @@ def retrieve_docs(query):
         pairs.append(
             (query, doc.page_content)
         )
+    #get score
+    scores = reranker.predict(pairs)
+    #combine docs
+    scored_docs = []
+
+    for doc, score in zip(docs, scores):
+
+        scored_docs.append({
+            "doc": doc,
+            "score": score
+        })
+
+    # SORT HIGH SCORE FIRST
+    scored_docs = sorted(
+        scored_docs,
+        key=lambda x: x["score"],
+        reverse=True
+    )
+
+    # TOP 4 DOCS
+    final_docs = []
+
+    for item in scored_docs[:4]:
+        final_docs.append(item["doc"])
+
+    return final_docs
