@@ -1,17 +1,33 @@
 import os
+
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
-from retriever import retrieve_docs
-from langchain.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+from langchain_core.prompts import PromptTemplate
 from langchain_core.output_parsers import StrOutputParser
+
+from retriever import retrieve_docs
 
 load_dotenv()
 
-llm = ChatGoogleGenerativeAI(
-    model = "gemini-3.1-flash",
-    temperature = 0.3,
-    google_api_key = os.getenv("GOOGLE_API_KEY")
+MODEL_NAME = os.getenv(
+    "GROQ_MODEL",
+    "llama-3.3-70b-versatile"
 )
+
+# =========================
+# GEMINI MODEL
+# =========================
+
+llm = ChatOpenAI(
+    model=MODEL_NAME,
+    temperature=0.3,
+    api_key=os.getenv("GROQ_API_KEY"),
+    base_url="https://api.groq.com/openai/v1"
+)
+
+# =========================
+# PROMPT
+# =========================
 
 prompt = PromptTemplate(
     input_variables=["context", "question"],
@@ -20,8 +36,9 @@ You are a helpful AI assistant.
 
 Answer only from the given context.
 
-If answer is not present,
+If answer is not present in context,
 say:
+
 "I could not find this in documents."
 
 Context:
@@ -33,28 +50,44 @@ Question:
 )
 
 chain = prompt | llm | StrOutputParser()
+
 print("RAG Chatbot Started")
+
+# =========================
+# CHAT LOOP
+# =========================
 
 while True:
 
-    query = input("\nAsk: ")
+    try:
+        query = input("\nAsk: ").strip()
+    except EOFError:
+        print("\nExiting chat.")
+        break
+
+    if not query:
+        continue
 
     if query.lower() == "exit":
         break
 
-    # RETRIEVE DOCS
     docs = retrieve_docs(query)
 
-    # MAKE CONTEXT
     context = "\n\n".join([
         doc.page_content
         for doc in docs
     ])
 
-    # GET RESPONSE
-    response = chain.invoke({
-        "context": context,
-        "question": query
-    })
-    print("\nAnswer:\n")
-    print(response)
+    try:
+        response = chain.invoke({
+            "context": context,
+            "question": query
+        })
+        print("\nAnswer:\n")
+        print(response)
+    except Exception as exc:
+        print("\nError while generating response:")
+        print(exc)
+        print(
+            "\nTip: verify Gemini API quota/key and optionally switch model via GEMINI_CHAT_MODEL."
+        )

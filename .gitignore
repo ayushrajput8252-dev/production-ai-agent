@@ -6,7 +6,7 @@ __pycache__/
 open/
 venv/
 .env
-
+storage/
 # Python cache
 __pycache__/
 *.pyc
