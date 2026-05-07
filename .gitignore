@@ -2,10 +2,24 @@
 __pycache__/
 *.py[codz]
 *$py.class
+# Virtual Environment
+open/
+venv/
+.env
 
+# Python cache
+__pycache__/
+*.pyc
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
 # C extensions
 *.so
-
+.env
 # Distribution / packaging
 .Python
 build/
