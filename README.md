@@ -1,85 +1,206 @@
-# AI RAG Bot
+# AI RAG & Multi-Agent Chatbot
 
-A Retrieval-Augmented Generation (RAG) chatbot built with LangChain, Pinecone, and Google Gemini.
+Modern AI chatbot powered by **RAG + Agentic AI** using **FastAPI**, **LangChain**, **Gemini**, and **WebSockets**.
 
-## Features
+Built for intelligent company support, employee search, automated workflows, and task handling.
 
-- **Hybrid Retrieval**: Combines vector search and BM25 for better document retrieval
-- **Reranking**: Uses cross-encoder reranking for improved relevance
-- **Multiple Document Support**: Processes PDF documents from the data folder
-- **Pinecone Integration**: Scalable vector database for embeddings
-- **Google Gemini**: Advanced language model for responses
+---
 
-## Prerequisites
+# ✨ Core Features
 
-1. **Python 3.8+**
-2. **Ollama** (for local embeddings)
-   - Install from https://ollama.ai
-   - Run: `ollama pull mxbai-embed-large`
-3. **API Keys**:
-   - Google Gemini API Key
-   - Pinecone API Key
+- 🤖 Dual Agent Modes
+- ⚡ Real-time Streaming Responses
+- 🧠 Memory & Context Awareness
+- 📄 PDF Knowledge Base Support
+- 🔍 Hybrid Retrieval + Reranking
+- 🌐 Modern HTML/CSS/JS Frontend
+- 🚀 FastAPI + WebSocket Backend
 
-## Setup
+---
 
-1. **Install Dependencies**:
-   ```bash
-   pip install -r requirements.txt
-   ```
+# 🧩 Agent Modes
 
-2. **Set Up Environment Variables**:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your API keys
-   ```
+## 📚 RAG Agent — Company & Employee Assistant
 
-3. **Process Documents**:
-   ```bash
-   python ingest.py
-   ```
+Ask anything related to:
 
-4. **Start Streamlit UI**:
-   ```bash
-   python run.py
-   # OR
-   streamlit run streamlit_app.py
-   ```
+- Company information
+- Employees and teams
+- Skills and departments
+- Internal documents
+- Policies and workflows
+- Project-related queries
 
-## Usage
+### Example Queries
 
-### Streamlit Web UI (Recommended)
-- **RAG Mode**: Query documents using retrieval-augmented generation
-- **Agent Mode**: Use the multi-agent system for intelligent routing and responses
-- **Show Thinking**: Toggle to see the processing steps and thinking process
-- **Chat History**: Automatic memory and conversation context management
 
-### Features
-- 🤖 Two AI modes: RAG Bot and Agent
-- 💭 Thinking process visibility toggle
-- 📝 Persistent chat history with session management
-- 🔄 Automatic context awareness across conversations
 
-## File Structure
+### How It Works
 
-```
-├── data/                  # PDF documents
-├── storage/              # Processed chunks (auto-created)
-├── ingest.py             # Document processing
-├── retriever.py          # Retrieval logic
-├── rag_agent.py          # Main chatbot
-├── requirements.txt       # Dependencies
-└── .env.example         # Environment template
+```txt
+Documents → Retrieval → Reranking → Gemini Response
 ```
 
-## Troubleshooting
+### Powered By
 
-1. **Ollama Connection Error**: Ensure Ollama is running and the embedding model is pulled
-2. **Pinecone Connection**: Verify API key and index name
-3. **Missing Chunks**: Run `ingest.py` first to process documents
-4. **API Key Issues**: Check environment variables in `.env`
+- Hybrid Search (Vector + BM25)
+- Pinecone Vector Database
+- Google Gemini
 
-## Architecture
+---
 
-- **Ingestion**: PDFs → Chunks → Embeddings → Pinecone
-- **Retrieval**: Hybrid (Vector + BM25) → Reranking → Top Documents
-- **Generation**: Retrieved Docs + Gemini → Response
+## 🤖 Agent Mode — Automated Business Workflow Agent
+
+Performs real-world business tasks automatically using AI agents.
+
+### Supported Automations
+
+✅ If a candidate matches a job opening  
+→ Sends mail to HR
+
+✅ If user gives feedback (good/bad)  
+→ Sends mail to Support Team
+
+✅ If business-related query detected  
+→ Sends mail to CTO
+
+✅ Assign tasks to employees/teams  
+→ Selects relevant employee and assigns task
+
+✅ Smart routing based on query type
+
+---
+
+# ⚡ Example Workflows
+
+## Hiring Workflow
+
+```txt
+Candidate Query
+    ↓
+AI checks required skills
+    ↓
+Matches employee/job data
+    ↓
+Sends mail to HR automatically
+```
+
+## Support Workflow
+
+```txt
+Customer Feedback
+    ↓
+AI detects sentiment
+    ↓
+Routes issue to support team
+```
+
+## Task Assignment Workflow
+
+```txt
+Task Request
+    ↓
+AI checks employee skills & availability
+    ↓
+Assigns task to best matching employee
+```
+
+---
+
+# ⚙️ Tech Stack
+
+- LangChain
+- LangGraph
+- Google Gemini
+- Pinecone
+- FastAPI
+- WebSockets
+- HTML/CSS/JavaScript
+
+---
+
+# 🚀 Quick Start
+
+## 1. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+## 2. Setup Environment Variables
+
+```bash
+cp .env.example .env
+```
+
+Add your keys inside `.env`
+
+```env
+GOOGLE_API_KEY=
+PINECONE_API_KEY=
+EMAIL_USER=
+EMAIL_PASS=
+```
+
+---
+
+## 3. Process Documents
+
+```bash
+python ingest.py
+```
+
+---
+
+## 4. Start Server
+
+```bash
+python start_server.py
+```
+
+Open in browser:
+
+```txt
+http://localhost:8000
+```
+
+---
+
+# 📂 Project Structure
+
+```bash
+├── agent/               # Multi-agent workflows
+├── data/                # Company documents
+├── static/              # Frontend UI
+├── app.py               # FastAPI backend
+├── rag_agent.py         # RAG system
+├── retriever.py         # Retrieval pipeline
+├── mail.py              # Email automation
+├── employee.json        # Employee database
+└── start_server.py      # Server runner
+```
+
+---
+
+# 🌟 Highlights
+
+- Intelligent RAG-based company assistant
+- Real-time AI streaming chatbot
+- Automated business workflows
+- AI-powered task assignment
+- Email automation system
+- Modern scalable architecture
+
+---
+
+# 🔮 Future Improvements
+
+- PostgreSQL memory integration
+- Jira automation
+- Advanced multi-agent orchestration
+- Role-based access control
+- AI analytics dashboard
+
+---
+
+Built with modern **RAG + Agentic AI architecture** for scalable enterprise AI systems.
