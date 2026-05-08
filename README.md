@@ -33,6 +33,7 @@ Ask anything related to:
 
 ### Example Queries
 
+<img width="1908" height="926" alt="Screenshot 2026-05-08 135212" src="https://github.com/user-attachments/assets/45512987-3b5f-4fa9-9d75-e0ec05f82243" />
 
 
 ### How It Works
