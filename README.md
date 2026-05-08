@@ -33,26 +33,31 @@ A Retrieval-Augmented Generation (RAG) chatbot built with LangChain, Pinecone, a
    # Edit .env with your API keys
    ```
 
-3. **Run Ollama**:
-   ```bash
-   ollama serve
-   ```
-
-4. **Process Documents**:
+3. **Process Documents**:
    ```bash
    python ingest.py
    ```
 
-5. **Start Chatbot**:
+4. **Start Streamlit UI**:
    ```bash
-   python rag_agent.py
+   python run.py
+   # OR
+   streamlit run streamlit_app.py
    ```
 
 ## Usage
 
-- Ask questions about your documents
-- Type "exit" to quit
-- The bot will answer based on the provided PDF documents
+### Streamlit Web UI (Recommended)
+- **RAG Mode**: Query documents using retrieval-augmented generation
+- **Agent Mode**: Use the multi-agent system for intelligent routing and responses
+- **Show Thinking**: Toggle to see the processing steps and thinking process
+- **Chat History**: Automatic memory and conversation context management
+
+### Features
+- 🤖 Two AI modes: RAG Bot and Agent
+- 💭 Thinking process visibility toggle
+- 📝 Persistent chat history with session management
+- 🔄 Automatic context awareness across conversations
 
 ## File Structure
 

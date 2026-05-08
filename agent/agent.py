@@ -2,11 +2,19 @@ from typing import TypedDict
 
 from langgraph.graph import END, StateGraph
 
-from agents.career_agent import career_agent
-from agents.feedback_agent import feedback_agent
-from agents.query_agent import query_agent
-from agents.supervisor_agent import supervisor_agent
-from agents.task_agent import task_agent
+try:
+    from agent.agents.career_agent import career_agent
+    from agent.agents.feedback_agent import feedback_agent
+    from agent.agents.query_agent import query_agent
+    from agent.agents.supervisor_agent import supervisor_agent
+    from agent.agents.task_agent import task_agent
+except ModuleNotFoundError:
+    # Fallback when running `python agent/main.py` directly.
+    from agents.career_agent import career_agent
+    from agents.feedback_agent import feedback_agent
+    from agents.query_agent import query_agent
+    from agents.supervisor_agent import supervisor_agent
+    from agents.task_agent import task_agent
 
 
 class AgentState(TypedDict):

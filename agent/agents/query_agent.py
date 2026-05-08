@@ -1,7 +1,11 @@
 from langchain_openai import ChatOpenAI
-from mail import send_mail
 from dotenv import load_dotenv
 import os
+
+try:
+    from agent.mail import send_mail
+except ModuleNotFoundError:
+    from mail import send_mail
 
 load_dotenv()
 

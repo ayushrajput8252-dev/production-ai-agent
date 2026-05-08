@@ -1,5 +1,9 @@
-from utils import load_career_data, calculate_match
-from mail import send_mail
+try:
+    from agent.utils import load_career_data, calculate_match
+    from agent.mail import send_mail
+except ModuleNotFoundError:
+    from utils import load_career_data, calculate_match
+    from mail import send_mail
 
 
 def career_agent(user_query):
@@ -16,7 +20,7 @@ def career_agent(user_query):
         if score >= 70:
 
             ok, err = send_mail(
-                "info@theOpenEyes.com",
+                "hr@openeyes",
                 "Candidate Selected",
                 f"""
 Candidate matched

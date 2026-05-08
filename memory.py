@@ -1,39 +1,40 @@
 import sqlite3
 
-# CREATE DATABASE
-conn = sqlite3.connect("memory.db")
-
-cur = conn.cursor()
-
-# CREATE TABLE
-cur.execute("""
-CREATE TABLE IF NOT EXISTS memory (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    session_id TEXT,
-    user_message TEXT,
-    ai_message TEXT
-)
-""")
-
-conn.commit()
+def _get_connection():
+    conn = sqlite3.connect("memory.db", check_same_thread=False)
+    cur = conn.cursor()
+    cur.execute(
+        """
+        CREATE TABLE IF NOT EXISTS memory (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            user_message TEXT,
+            ai_message TEXT
+        )
+        """
+    )
+    conn.commit()
+    return conn
 
 # SAVE CHAT
 def save_chat(session_id, user_msg, ai_msg):
-
+    conn = _get_connection()
+    cur = conn.cursor()
     cur.execute(
         """
         INSERT INTO memory
         (session_id, user_message, ai_message)
         VALUES (?, ?, ?)
         """,
-        (session_id, user_msg, ai_msg)
+        (session_id, user_msg, ai_msg),
     )
-
     conn.commit()
+    conn.close()
 
 # LOAD MEMORY
 def load_memory(session_id):
-
+    conn = _get_connection()
+    cur = conn.cursor()
     cur.execute(
         """
         SELECT user_message, ai_message
@@ -41,10 +42,10 @@ def load_memory(session_id):
         WHERE session_id = ?
         ORDER BY id
         """,
-        (session_id,)
+        (session_id,),
     )
-
     rows = cur.fetchall()
+    conn.close()
 
     history = ""
 

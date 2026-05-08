@@ -5,7 +5,7 @@ __pycache__/
 # Virtual Environment
 open/
 venv/
-.env
+#.env
 storage/
 # Python cache
 __pycache__/

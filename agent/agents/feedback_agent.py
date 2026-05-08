@@ -1,7 +1,11 @@
-from mail import send_mail
 from dotenv import load_dotenv
 import os
 from langchain_openai import ChatOpenAI
+
+try:
+    from agent.mail import send_mail
+except ModuleNotFoundError:
+    from mail import send_mail
 
 load_dotenv()
 
@@ -44,7 +48,7 @@ def feedback_agent(user_query):
 
     if sentiment == "good":
 
-        ok, err = send_mail("info@theOpenEyes.com", "Positive Customer Feedback", user_query)
+        ok, err = send_mail("support@theOpenEyes.com", "Positive Customer Feedback", user_query)
         if ok:
             if err:
                 return f"Good feedback mail sent ({err})"
@@ -57,7 +61,7 @@ def feedback_agent(user_query):
 
     else:
 
-        ok, err = send_mail("info@theOpenEyes.com", "Negative Customer Feedback", user_query)
+        ok, err = send_mail("support@theOpenEyes.com", "Negative Customer Feedback", user_query)
         if ok:
             if err:
                 return f"Bad feedback mail sent ({err})"

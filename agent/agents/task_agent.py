@@ -1,5 +1,9 @@
-from utils import load_employee_data
-from mail import send_mail
+try:
+    from agent.utils import load_employee_data
+    from agent.mail import send_mail
+except ModuleNotFoundError:
+    from utils import load_employee_data
+    from mail import send_mail
 
 
 def task_agent(user_query):
