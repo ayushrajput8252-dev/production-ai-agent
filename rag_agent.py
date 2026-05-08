@@ -8,18 +8,12 @@ from memory import save_chat, load_memory
 from retriever import retrieve_docs
 
 load_dotenv()
-
-MODEL_NAME = os.getenv(
-    "GROQ_MODEL",
-    "llama-3.3-70b-versatile"
-)
-
 # =========================
 # GEMINI MODEL
 # =========================
 
 llm = ChatOpenAI(
-    model=MODEL_NAME,
+    model=os.getenv("GROQ_MODEL"),
     temperature=0.3,
     api_key=os.getenv("GROQ_API_KEY"),
     base_url="https://api.groq.com/openai/v1"
@@ -57,12 +51,25 @@ print("RAG Chatbot Started")
 # CHAT LOOP
 # =========================
 
-session_id = input("Session ID: ")
+try:
+    session_id = input("Session ID: ").strip()
+except EOFError:
+    print("\nExiting chat.")
+    raise SystemExit(0)
+
+if not session_id:
+    session_id = "default"
 
 while True:
 
-    query = input("\nAsk: ").strip()
+    try:
+        query = input("\nAsk: ").strip()
+    except EOFError:
+        print("\nExiting chat.")
+        break
 
+    if not query:
+        continue
     if query.lower() == "exit":
         break
 
@@ -86,17 +93,19 @@ Context:
 {context}
 """
 
-    response = chain.invoke({
-        "context": final_context,
-        "question": query
-    })
-
-    print("\nAnswer:\n")
-    print(response)
-
-    # SAVE MEMORY
-    save_chat(
-        session_id,
-        query,
-        response
-    )
+    try:
+        response = chain.invoke({
+            "context": final_context,
+            "question": query
+        })
+        print("\nAnswer:\n")
+        print(response)
+        # SAVE MEMORY
+        save_chat(
+            session_id,
+            query,
+            response
+        )
+    except Exception as exc:
+        print("\nError while generating response:")
+        print(exc)
