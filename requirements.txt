@@ -6,7 +6,7 @@ langchain_openai==1.2.1
 langchain_pinecone==0.2.13
 langchain_text_splitters==1.1.2
 langgraph==1.1.10
-pinecone==9.0.0
+pinecone==7.3.0
 python-dotenv==1.2.2
 requests==2.33.1
 uvicorn==0.46.0
