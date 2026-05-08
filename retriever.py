@@ -9,7 +9,7 @@ from langchain_pinecone import PineconeVectorStore
 from langchain_community.retrievers import BM25Retriever
 from langchain_classic.retrievers import EnsembleRetriever
 
-#from sentence_transformers import CrossEncoder
+# from sentence_transformers import CrossEncoder
 
 load_dotenv()
 
@@ -17,7 +17,15 @@ load_dotenv()
 # LOAD CHUNKS
 # =========================
 
-with open("storage/chunks.pkl", "rb") as f:
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+chunks_path = os.path.join(
+    BASE_DIR,
+    "storage",
+    "chunks.pkl"
+)
+
+with open(chunks_path, "rb") as f:
     chunks = pickle.load(f)
 
 # =========================
@@ -27,16 +35,24 @@ with open("storage/chunks.pkl", "rb") as f:
 PINECONE_API_KEY = os.getenv("PINECONE_API_KEY")
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 INDEX_NAME = os.getenv("PINECONE_INDEX")
-EMBEDDING_MODEL = "models/gemini-embedding-001"
-ENABLE_RERANKER = os.getenv("ENABLE_RERANKER", "false").lower() == "true"
 
-if not PINECONE_API_KEY or not GOOGLE_API_KEY or not INDEX_NAME:
-    raise ValueError(
-        "Missing env vars. Set GOOGLE_API_KEY, PINECONE_API_KEY, and PINECONE_INDEX in .env."
-    )
+EMBEDDING_MODEL = "models/gemini-embedding-001"
+
+ENABLE_RERANKER = (
+    os.getenv("ENABLE_RERANKER", "false").lower() == "true"
+)
+
+if not PINECONE_API_KEY:
+    raise ValueError("Missing PINECONE_API_KEY")
+
+if not GOOGLE_API_KEY:
+    raise ValueError("Missing GOOGLE_API_KEY")
+
+if not INDEX_NAME:
+    raise ValueError("Missing PINECONE_INDEX")
 
 # =========================
-# GEMINI EMBEDDINGS
+# EMBEDDINGS
 # =========================
 
 embeddings = GoogleGenerativeAIEmbeddings(
@@ -58,7 +74,7 @@ vector_retriever = vectorstore.as_retriever(
 )
 
 # =========================
-# BM25 RETRIEVER
+# BM25
 # =========================
 
 bm25_retriever = BM25Retriever.from_documents(chunks)
@@ -78,25 +94,27 @@ hybrid_retriever = EnsembleRetriever(
 )
 
 # =========================
-# RERANKER (OPTIONAL)
+# OPTIONAL RERANKER
 # =========================
 
 reranker = None
-#if ENABLE_RERANKER:
-#    try:
-#        reranker = CrossEncoder("BAAI/bge-reranker-base")
-#    except Exception as exc:
-#        print(f"Reranker unavailable, using hybrid retrieval only: {exc}")
+
+# if ENABLE_RERANKER:
+#     try:
+#         reranker = CrossEncoder(
+#             "BAAI/bge-reranker-base"
+#         )
+#     except Exception as exc:
+#         print(f"Reranker unavailable: {exc}")
 
 # =========================
-# RETRIEVE FUNCTION
+# RETRIEVE DOCS
 # =========================
 
 def retrieve_docs(query):
 
     docs = hybrid_retriever.invoke(query)
 
-    # REMOVE DUPLICATES
     unique_docs = []
 
     seen = set()
@@ -109,8 +127,9 @@ def retrieve_docs(query):
 
             unique_docs.append(doc)
 
-    # RERANK WHEN AVAILABLE, OTHERWISE RETURN TOP HYBRID HITS
+    # OPTIONAL RERANKING
     if reranker and unique_docs:
+
         pairs = [
             (query, doc.page_content)
             for doc in unique_docs
@@ -120,8 +139,7 @@ def retrieve_docs(query):
 
         scored_docs = list(zip(unique_docs, scores))
 
-        scored_docs = sorted(
-            scored_docs,
+        scored_docs.sort(
             key=lambda x: x[1],
             reverse=True
         )
