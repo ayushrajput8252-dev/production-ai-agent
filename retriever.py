@@ -9,7 +9,7 @@ from langchain_pinecone import PineconeVectorStore
 from langchain_community.retrievers import BM25Retriever
 from langchain_classic.retrievers import EnsembleRetriever
 
-from sentence_transformers import CrossEncoder
+#from sentence_transformers import CrossEncoder
 
 load_dotenv()
 
@@ -82,11 +82,11 @@ hybrid_retriever = EnsembleRetriever(
 # =========================
 
 reranker = None
-if ENABLE_RERANKER:
-    try:
-        reranker = CrossEncoder("BAAI/bge-reranker-base")
-    except Exception as exc:
-        print(f"Reranker unavailable, using hybrid retrieval only: {exc}")
+#if ENABLE_RERANKER:
+#    try:
+#        reranker = CrossEncoder("BAAI/bge-reranker-base")
+#    except Exception as exc:
+#        print(f"Reranker unavailable, using hybrid retrieval only: {exc}")
 
 # =========================
 # RETRIEVE FUNCTION
