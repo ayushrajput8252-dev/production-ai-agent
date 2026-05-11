@@ -1,207 +1,495 @@
-# AI RAG & Multi-Agent Chatbot
+# OpenEyes AI Agent - Complete Documentation
 
-Modern AI chatbot powered by **RAG + Agentic AI** using **FastAPI**, **LangChain**, **Gemini**, and **WebSockets**.
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Project Structure](#project-structure)
+3. [Setup & Installation](#setup--installation)
+4. [Environment Configuration](#environment-configuration)
+5. [Running the Project](#running-the-project)
+6. [API Documentation](#api-documentation)
+7. [Agent Architecture](#agent-architecture)
+8. [Frontend Integration](#frontend-integration)
+9. [Troubleshooting](#troubleshooting)
 
-Built for intelligent company support, employee search, automated workflows, and task handling.
+## Project Overview
 
----
+OpenEyes is a full-stack AI agent application combining:
+- **Frontend**: Next.js React application with beautiful UI
+- **Backend**: FastAPI server with two main agents:
+  - **RAG Agent**: Retrieval-Augmented Generation for knowledge-based Q&A
+      ```python
+      ----ai-chat-overlay.tsx----
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8003"
+      ```
+  - **Tool Agent**: Multi-purpose agent with specialized sub-agents
 
-# ✨ Core Features
+### Key Features
+- Intelligent query routing
+- Email-based workflow automation
+- Job matching and career assistance
+- Customer feedback classification
+- Task assignment system
+- Real-time chat interface
 
-- 🤖 Dual Agent Modes
-- ⚡ Real-time Streaming Responses
-- 🧠 Memory & Context Awareness
-- 📄 PDF Knowledge Base Support
-- 🔍 Hybrid Retrieval + Reranking
-- 🌐 Modern HTML/CSS/JS Frontend
-- 🚀 FastAPI + WebSocket Backend
+## Project Structure
 
----
-
-# 🧩 Agent Modes
-
-## 📚 RAG Agent — Company & Employee Assistant
-
-Ask anything related to:
-
-- Company information
-- Employees and teams
-- Skills and departments
-- Internal documents
-- Policies and workflows
-- Project-related queries
-
-### Example Queries
-
-<img width="1908" height="926" alt="Screenshot 2026-05-08 135212" src="https://github.com/user-attachments/assets/45512987-3b5f-4fa9-9d75-e0ec05f82243" />
-
-
-### How It Works
-
-```txt
-Documents → Retrieval → Reranking → Gemini Response
+```
+production-ai-agent/
+├── agent/                           # Backend Python code
+│   ├── __init__.py                 # Package init
+│   ├── api.py                      # FastAPI app & endpoints
+│   ├── tool/                       # Tool Agent
+│   │   ├── __init__.py
+│   │   ├── agent.py               # LangGraph implementation
+│   │   ├── main.py                # CLI entry point
+│   │   ├── utils.py               # Helper functions
+│   │   ├── mail.py                # Email utilities
+│   │   ├── data/                  # Data files
+│   │   │   ├── employee.json
+│   │   │   └── carerrs.json
+│   │   └── sub_agent/             # Specialized agents
+│   │       ├── __init__.py
+│   │       ├── supervisor.py      # Router agent
+│   │       ├── query.py           # Query handler
+│   │       ├── feedback.py        # Feedback classifier
+│   │       ├── career.py          # Career matcher
+│   │       └── task.py            # Task assigner
+│   └── rag/                        # RAG Agent
+│       ├── __init__.py
+│       ├── rag_agent.py           # RAG implementation
+│       ├── retriever.py           # Document retrieval
+│       └── ingest.py              # Data ingestion
+├── app/                            # Frontend (Next.js)
+│   ├── page.tsx                   # Main page
+│   └── layout.tsx                 # Root layout
+├── components/                     # React components
+│   ├── chat/                      # Chat components
+│   │   ├── ai-chat-overlay.tsx    # Main chat UI
+│   │   └── floating-assistant-button.tsx
+│   ├── landing/                   # Landing page sections
+│   ├── ui/                        # Reusable UI components
+│   └── theme-provider.tsx
+├── memory.py                       # SQLite chat memory
+├── package.json                    # Frontend dependencies
+├── requirements.txt                # Python dependencies
+├── tsconfig.json                   # TypeScript config
+├── next.config.mjs                # Next.js config
+└── .env.example                    # Environment template
 ```
 
-### Powered By
+## Setup & Installation
 
-- Hybrid Search (Vector + BM25)
-- Pinecone Vector Database
-- Google Gemini
+### Prerequisites
+- Python 3.8+
+- Node.js 16+
+- npm or pnpm
+- SQLite3 (usually included)
 
----
-
-## 🤖 Agent Mode — Automated Business Workflow Agent
-
-Performs real-world business tasks automatically using AI agents.
-
-### Supported Automations
-
-✅ If a candidate matches a job opening  
-→ Sends mail to HR
-
-✅ If user gives feedback (good/bad)  
-→ Sends mail to Support Team
-
-✅ If business-related query detected  
-→ Sends mail to CTO
-
-✅ Assign tasks to employees/teams  
-→ Selects relevant employee and assigns task
-
-✅ Smart routing based on query type
-
----
-
-# ⚡ Example Workflows
-
-## Hiring Workflow
-
-```txt
-Candidate Query
-    ↓
-AI checks required skills
-    ↓
-Matches employee/job data
-    ↓
-Sends mail to HR automatically
-```
-
-## Support Workflow
-
-```txt
-Customer Feedback
-    ↓
-AI detects sentiment
-    ↓
-Routes issue to support team
-```
-
-## Task Assignment Workflow
-
-```txt
-Task Request
-    ↓
-AI checks employee skills & availability
-    ↓
-Assigns task to best matching employee
-```
-
----
-
-# ⚙️ Tech Stack
-
-- LangChain
-- LangGraph
-- Google Gemini
-- Pinecone
-- FastAPI
-- WebSockets
-- HTML/CSS/JavaScript
-
----
-
-# 🚀 Quick Start
-
-## 1. Install Dependencies
+### Step 1: Clone & Install Python Dependencies
 
 ```bash
+cd c:\AYUSH\openeyes\production-ai-agent
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+
+# Install Python packages
 pip install -r requirements.txt
 ```
 
-## 2. Setup Environment Variables
+### Step 2: Install Node Dependencies
+
+```bash
+# Using npm
+npm install
+
+# OR using pnpm (faster)
+pnpm install
+```
+
+### Step 3: Setup Environment Variables
+
+Create a `.env` file in the project root:
 
 ```bash
 cp .env.example .env
 ```
 
-Add your keys inside `.env`
+Edit `.env` with your API keys:
 
 ```env
-GOOGLE_API_KEY=
-PINECONE_API_KEY=
-EMAIL_USER=
-EMAIL_PASS=
+# Google Generative AI API Key
+GOOGLE_API_KEY=your_google_api_key_here
+GEMINI_CHAT_MODEL=models/gemini-2.0-flash
+
+# GROQ API Configuration
+GROQ_API_KEY=your_groq_api_key_here
+GROQ_MODEL=llama-3.3-70b-versatile
+
+# Pinecone Configuration
+PINECONE_API_KEY=your_pinecone_api_key_here
+PINECONE_INDEX=your_pinecone_index_name
+
+# Email Configuration
+EMAIL_USER=your_email@gmail.com
+EMAIL_PASS=your_app_password_here
+MAIL_MODE=smtp
+
+# Optional: enable cross-encoder reranking
+ENABLE_RERANKER=false
 ```
 
----
+## Environment Configuration
 
-## 3. Process Documents
+### Required API Keys
+
+#### 1. **GROQ API** (LLM Provider)
+- Get key from: https://console.groq.com/
+- Free tier: 30 requests/minute
+- Used for: Supervisor routing, feedback analysis, query classification
+
+#### 2. **Google Generative AI** (Embeddings)
+- Get key from: https://ai.google.dev/
+- Used for: Document embeddings in RAG system
+
+#### 3. **Pinecone** (Vector Database)
+- Get key from: https://www.pinecone.io/
+- Used for: Storing and retrieving document embeddings
+
+#### 4. **Email Configuration**
+- **For Gmail**:
+  1. Enable 2-factor authentication
+  2. Create an app password
+  3. Use app password in `EMAIL_PASS`
+- **MAIL_MODE**:
+  - `smtp`: Send real emails
+  - `local`: Queue emails locally (for testing)
+
+## Running the Project
+
+### Option 1: Run Backend & Frontend Separately (Development)
+
+**Terminal 1 - Start FastAPI Server:**
+```bash
+# Activate virtual environment
+venv\Scripts\activate
+
+# Run FastAPI server
+python -m uvicorn agent.api:app --reload --host 0.0.0.0 --port 8000
+```
+
+Server will be available at: `http://localhost:8000`
+
+**Terminal 2 - Start Next.js Frontend:**
+```bash
+# Make sure you're in the project root
+npm run dev
+# OR with pnpm
+pnpm dev
+```
+
+Frontend will be available at: `http://localhost:3000`
+
+### Option 2: Run Tool Agent CLI
+
+For testing the Tool Agent directly:
 
 ```bash
-python ingest.py
+python -m agent.tool.main
 ```
 
----
+This opens an interactive prompt to test queries.
 
-## 4. Start Server
+### Testing the API
+
+Use Postman or curl to test:
 
 ```bash
-python start_server.py
+# Test RAG Agent
+curl -X POST http://localhost:8000/api/rag-agent \
+  -H "Content-Type: application/json" \
+  -d '{"query": "What is your company about?"}'
+
+# Test Tool Agent
+curl -X POST http://localhost:8000/api/tool-agent \
+  -H "Content-Type: application/json" \
+  -d '{"query": "I have feedback about the service"}'
+
+# Check health
+curl http://localhost:8000/health
+
+# Get available agents
+curl http://localhost:8000/api/agents
 ```
 
-Open in browser:
+## API Documentation
 
-```txt
-http://localhost:8000
+### Base URL
+- **Development**: `http://localhost:8000`
+- **Production**: Update `NEXT_PUBLIC_API_URL` in frontend
+
+### Endpoints
+
+#### 1. Health Check
+```
+GET /health
+```
+**Response:**
+```json
+{
+  "status": "healthy",
+  "message": "OpenEyes AI Agent API is running"
+}
 ```
 
----
+#### 2. Tool Agent
+```
+POST /api/tool-agent
+```
 
-# 📂 Project Structure
+**Request:**
+```json
+{
+  "query": "I have feedback about your service",
+  "session_id": "user_123",
+  "context": null
+}
+```
 
+**Response:**
+```json
+{
+  "success": true,
+  "result": "Good feedback mail sent",
+  "agent": "tool-agent",
+  "error": null
+}
+```
+
+**Query Types:**
+- **Feedback**: "feedback", "complaint", "review"
+- **Career**: "career", "resume", "job"
+- **Task**: "task", "assign"
+- **Query**: General questions
+
+#### 3. RAG Agent
+```
+POST /api/rag-agent
+```
+
+**Request:**
+```json
+{
+  "query": "What documents do you have?",
+  "session_id": "user_123",
+  "context": "Optional context from retriever"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "result": "Based on the documents...",
+  "agent": "rag-agent",
+  "error": null
+}
+```
+
+#### 4. Available Agents
+```
+GET /api/agents
+```
+
+**Response:**
+```json
+{
+  "agents": [
+    {
+      "id": "tool-agent",
+      "name": "Tool Agent",
+      "description": "...",
+      "endpoint": "/api/tool-agent",
+      "capabilities": [...]
+    },
+    ...
+  ]
+}
+```
+
+## Agent Architecture
+
+### Tool Agent Flow
+
+```
+User Query
+    ↓
+Supervisor Agent (Routes to appropriate sub-agent)
+    ↓
+    ├─→ Query Sub-Agent (Business queries)
+    ├─→ Feedback Sub-Agent (Customer feedback)
+    ├─→ Career Sub-Agent (Job matching)
+    └─→ Task Sub-Agent (Task assignment)
+    ↓
+Response
+```
+
+### RAG Agent Flow
+
+```
+User Query
+    ↓
+Retriever (Fetch relevant documents)
+    ↓
+Context Assembly
+    ↓
+LLM Processing
+    ↓
+Response Generation
+```
+
+### Sub-Agent Capabilities
+
+#### Query Agent
+- Classifies queries as: general, high priority, normal
+- Routes to appropriate email recipients
+- Sends summary emails
+
+#### Feedback Agent
+- Classifies sentiment: good, bad
+- Routes to support team
+- Maintains feedback history
+
+#### Career Agent
+- Matches skills against job positions
+- Calculates skill score
+- Notifies HR on match
+
+#### Task Agent
+- Routes tasks to employees
+- Sends email notifications
+- Tracks assignments
+
+## Frontend Integration
+
+### Configuration
+
+The frontend connects to the backend via environment variable:
+
+**In your `.env.local` or `.env`:**
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+```
+
+For production:
+```
+NEXT_PUBLIC_API_URL=https://your-api-domain.com
+```
+
+### API Calls
+
+The chat component automatically:
+1. Sends queries to the appropriate endpoint
+2. Handles responses
+3. Displays results in real-time
+4. Shows error messages if needed
+
+### Component Structure
+
+**AiChatOverlay.tsx** handles:
+- Agent selection (RAG vs Tool)
+- Message history
+- Real-time API calls
+- Error handling
+- UI state management
+
+## Troubleshooting
+
+### Backend Won't Start
+
+**Error:** `ModuleNotFoundError: No module named 'agent'`
+
+**Solution:**
 ```bash
-├── agent/               # Multi-agent workflows
-├── data/                # Company documents
-├── static/              # Frontend UI
-├── app.py               # FastAPI backend
-├── rag_agent.py         # RAG system
-├── retriever.py         # Retrieval pipeline
-├── mail.py              # Email automation
-├── employee.json        # Employee database
-└── start_server.py      # Server runner
+# Make sure you're in the correct directory
+cd c:\AYUSH\openeyes\production-ai-agent
+
+# Run from project root
+python -m uvicorn agent.api:app --reload
 ```
 
+### Import Errors in Python
+
+**Error:** `ImportError: cannot import name 'X' from 'agent.tool'`
+
+**Solution:**
+1. Verify `__init__.py` files exist in all agent directories
+2. Check Python path: `echo $PYTHONPATH`
+3. Reinstall with: `pip install -e .`
+
+### Frontend Can't Connect to Backend
+
+**Error:** `API error: 404` or `Failed to connect to backend`
+
+**Solution:**
+1. Verify FastAPI server is running: `http://localhost:8000/health`
+2. Check `NEXT_PUBLIC_API_URL` in frontend
+3. Verify CORS is enabled in `agent/api.py`
+4. Check browser console for actual error message
+
+### Email Not Sending
+
+**Error:** `Mail failed: ...`
+
+**Solution:**
+1. Verify `EMAIL_USER` and `EMAIL_PASS` in `.env`
+2. Check email credentials are correct
+3. For Gmail: Ensure app password is used (not regular password)
+4. Check `MAIL_MODE` setting (use "local" for testing)
+
+### Virtual Environment Issues
+
+**Error:** `venv not found` or `python: command not found`
+
+**Solution:**
+```bash
+# On Windows
+python -m venv venv
+venv\Scripts\activate
+
+# On macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Port Already in Use
+
+**Error:** `Address already in use`
+
+**Solution:**
+```bash
+# Change port for FastAPI
+python -m uvicorn agent.api:app --reload --port 8001
+
+# Change port for Next.js
+npm run dev -- -p 3001
+```
+
+## Support & Contact
+
+For issues or questions:
+1. Check the troubleshooting section
+2. Review environment variables
+3. Check API logs in terminal
+4. Review console errors in browser
+
 ---
 
-# 🌟 Highlights
-
-- Intelligent RAG-based company assistant
-- Real-time AI streaming chatbot
-- Automated business workflows
-- AI-powered task assignment
-- Email automation system
-- Modern scalable architecture
-
----
-
-# 🔮 Future Improvements
-
-- PostgreSQL memory integration
-- Jira automation
-- Advanced multi-agent orchestration
-- Role-based access control
-- AI analytics dashboard
-
----
-
-Built with modern **RAG + Agentic AI architecture** for scalable enterprise AI systems.
+**Last Updated:** 2026-05-10
+**Version:** 1.0.0

@@ -5,6 +5,7 @@ langchain_google_genai==4.2.2
 langchain_openai==1.2.1
 langchain_pinecone==0.2.13
 langchain_text_splitters==1.1.2
+langchain_huggingface==0.1.6
 langgraph==1.1.10
 pinecone==7.3.0
 python-dotenv==1.2.2
