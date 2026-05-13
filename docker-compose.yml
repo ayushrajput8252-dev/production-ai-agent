@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  # Backend - FastAPI Agent
+  backend:
+    build:
+      context: .
+      dockerfile: agent/Dockerfile
+    container_name: ai-agent-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./agent:/app/agent
+      - ./requirements.txt:/app/requirements.txt
+    networks:
+      - ai-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend - Next.js
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ai-agent-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - ai-network
+    volumes:
+      - ./app:/app/app
+      - ./components:/app/components
+      - ./public:/app/public
+
+networks:
+  ai-network:
+    driver: bridge
+
+volumes:
+  backend-data:
